@@ -1,0 +1,104 @@
+import Experience from "./Experience";
+import * as THREE from 'three';
+
+export default class Renderer {
+    constructor(){
+        this.experience = new Experience();
+        this.sizes = this.experience.sizes;
+        this.scene = this.experience.scene;
+        this.canvas = this.experience.canvas;
+        this.camera = this.experience.camera;
+        console.log(this.camera, this.camera.perspectiveCamera)
+        this.setRenderer();
+        
+    }
+    setRenderer(){
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas,
+            antialias: true
+        });
+        this.renderer.physicallyCorrectLights=true;
+        this.renderer.outputEncoding= THREE.sRGBEncoding;
+        this.renderer.toneMapping= THREE.CineonToneMapping;
+        this.renderer.toneMappingExposure= 1.75;
+        this.renderer.shadowMap.enabled=true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.setSize(this.sizes.width, this.sizes.height);
+        this.renderer.setPixelRatio(this.sizes.pixelRatio);
+    }
+    resize(){
+        this.renderer.setSize(this.sizes.width, this.sizes.height);
+        this.renderer.setPixelRatio(this.sizes.pixelRatio);
+    }
+    update(){
+        // this.renderer.setViewport(0,0,this.sizes.width, this.sizes.height)
+        this.renderer.render(this.scene, this.camera.orthographicCamera);
+
+        // this.renderer.setScissorTest(true);
+        // this.renderer.setViewport(
+        //     this.sizes.width - this.sizes.width/3,
+        //     this.sizes.height - this.sizes.height/3,
+        //     this.sizes.width / 3,
+        //     this.sizes.height / 3
+        // );
+        // this.renderer.setScissor(
+        //     this.sizes.width - this.sizes.width/3,
+        //     this.sizes.height - this.sizes.height/3,
+        //     this.sizes.width / 3,
+        //     this.sizes.height / 3
+        // );
+        // this.renderer.render(this.scene, this.camera.perspectiveCamera);
+
+        // this.renderer.setScissorTest(false);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import Experience from "../Experience";
+import * as THREE from "three";
+import GSAP from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger.js";
+export default class Controls {
+  constructor() {
+    this.experience = new Experience();
+    this.scene = this.experience.scene;
+    this.resources= this.experience.resources;
+    this.time= this.experience.time;
+    this.camera = this.experience.camera;
+    this.room = this.experience.world.room.actualRoom;
+    GSAP.registerPlugin(ScrollTrigger);
+    this.setPath();
+    
+  }
+  setPath(){
+    this.timeline = new GSAP.timeline();
+    this.timeline.to(this.room.position,{
+      x:0.5,
+      ScrollTrigger:{
+        trigger:".firove",
+        markers: true,
+        start: "top top",
+        end: "bottom bottom",
+        scrub:0.6,
+      },
+    });
+  }
+  resize() {}
+  update() {
+   
+    
+  }
+}
